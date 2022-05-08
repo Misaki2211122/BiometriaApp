@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/danii/source/BiometriaApp/app/src/main/res/layout/activity_main.xml" value="0.10916919959473151" />
+        <entry key="..\:/Users/danii/source/BiometriaApp/app/src/main/res/layout/activity_face_login.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/danii/source/BiometriaApp/app/src/main/res/layout/activity_finger_login.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/danii/source/BiometriaApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/danii/source/BiometriaApp/app/src/main/res/layout/activity_success_login.xml" value="0.22447916666666667" />
       </map>
     </option>
   </component>

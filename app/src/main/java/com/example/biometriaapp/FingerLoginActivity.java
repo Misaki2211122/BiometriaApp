@@ -13,9 +13,12 @@ import com.example.biometriaapp.services.clients.bsclient.Configuration;
 import com.example.biometriaapp.services.clients.bsclient.api.AndroidApi;
 import com.example.biometriaapp.services.clients.bsclient.model.DeviceIdAuthorizeRequest;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class FingerLoginActivity  extends AppCompatActivity {
 
@@ -35,7 +38,7 @@ public class FingerLoginActivity  extends AppCompatActivity {
         intent = new Intent(this, SuccessLoginActivity.class);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         api = new AndroidApi();
-
+        executor= Executors.newSingleThreadExecutor();
     }
 
     @Override
@@ -89,25 +92,41 @@ public class FingerLoginActivity  extends AppCompatActivity {
 
         @Override
         public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
+            try {
+               /* Callable task = () -> {
+                    return api.androidDeviceIdAuthorizePost(DeviceId);
+                };
+                FutureTask<DeviceIdAuthorizeRequest> future = new FutureTask<>(task);
+                new Thread(future).start();
+                DeviceIdAuthorizeRequest res  = System.out.println(future.get());
+                if (res.getDeviceId() == DeviceId){
+                    Toast.makeText(mContext, "Вы успешно авторизовались", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                }*/
 
                 Future<DeviceIdAuthorizeRequest> futureRes = executor.submit(() -> {
                     return api.androidDeviceIdAuthorizePost(DeviceId);
                 });
+                try {
+                    DeviceIdAuthorizeRequest res = futureRes.get();
+                    if (res.getDeviceId() == DeviceId){
+                        Toast.makeText(mContext, "Вы успешно авторизовались", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(mContext, "Ошибка авторизации попробуйте снова", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mContext, "Не удалось подключится к серверу", Toast.LENGTH_SHORT).show();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            catch (Exception ex){
+                ex.getMessage();
+            }
 
-            /*try {
-                DeviceIdAuthorizeRequest res = futureRes.get();
-                if (res.getDeviceId() == DeviceId){
-                    Toast.makeText(mContext, "Вы успешно авторизовались", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(mContext, "Ошибка авторизации попробуйте снова", Toast.LENGTH_SHORT).show();
-                }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
             Toast.makeText(mContext, "Ошибка авторизации попробуйте снова", Toast.LENGTH_SHORT).show();
         }
 

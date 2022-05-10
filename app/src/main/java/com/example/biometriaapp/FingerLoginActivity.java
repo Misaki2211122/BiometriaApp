@@ -34,7 +34,7 @@ public class FingerLoginActivity  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finger_login);
-        DeviceId = "1488";
+        DeviceId = "1111";
         intent = new Intent(this, SuccessLoginActivity.class);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         api = new AndroidApi();
@@ -93,23 +93,12 @@ public class FingerLoginActivity  extends AppCompatActivity {
         @Override
         public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
             try {
-               /* Callable task = () -> {
-                    return api.androidDeviceIdAuthorizePost(DeviceId);
-                };
-                FutureTask<DeviceIdAuthorizeRequest> future = new FutureTask<>(task);
-                new Thread(future).start();
-                DeviceIdAuthorizeRequest res  = System.out.println(future.get());
-                if (res.getDeviceId() == DeviceId){
-                    Toast.makeText(mContext, "Вы успешно авторизовались", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                }*/
-
                 Future<DeviceIdAuthorizeRequest> futureRes = executor.submit(() -> {
                     return api.androidDeviceIdAuthorizePost(DeviceId);
                 });
                 try {
                     DeviceIdAuthorizeRequest res = futureRes.get();
-                    if (res.getDeviceId() == DeviceId){
+                    if (res.getDeviceId() == null){
                         Toast.makeText(mContext, "Вы успешно авторизовались", Toast.LENGTH_SHORT).show();
                         startActivity(intent);
                     }

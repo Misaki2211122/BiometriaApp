@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.CancellationSignal;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.widget.Toast;
 import com.example.biometriaapp.services.clients.bsclient.Configuration;
 import com.example.biometriaapp.services.clients.bsclient.api.AndroidApi;
@@ -22,19 +23,17 @@ import java.util.concurrent.FutureTask;
 
 public class FingerLoginActivity  extends AppCompatActivity {
 
-
+    private String android_id = Settings.Secure.ANDROID_ID;
     private SharedPreferences mPreferences;
     private FingerprintHelper mFingerprintHelper;
     private Intent intent;
     private ExecutorService executor;
     private AndroidApi api;
-    private String DeviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finger_login);
-        DeviceId = "1111";
         intent = new Intent(this, SuccessLoginActivity.class);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         api = new AndroidApi();
@@ -94,7 +93,7 @@ public class FingerLoginActivity  extends AppCompatActivity {
         public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
             try {
                 Future<DeviceIdAuthorizeRequest> futureRes = executor.submit(() -> {
-                    return api.androidDeviceIdAuthorizePost(DeviceId);
+                    return api.androidDeviceIdAuthorizePost(String.valueOf(android_id.hashCode()));
                 });
                 try {
                     DeviceIdAuthorizeRequest res = futureRes.get();

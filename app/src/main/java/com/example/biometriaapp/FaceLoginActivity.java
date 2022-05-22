@@ -7,6 +7,7 @@ import android.hardware.Camera;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
@@ -28,17 +29,16 @@ import java.util.concurrent.Executors;
 
 public class FaceLoginActivity  extends AppCompatActivity {
 
+    private String android_id = Settings.Secure.ANDROID_ID;
     private FingerLoginActivity.FingerprintHelper mFingerprintHelper;
     private Intent intent;
     private ExecutorService executor;
     private AndroidApi api;
-    private String DeviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_login);
-        DeviceId = "1111";
         intent = new Intent(this, SuccessLoginActivity.class);
         api = new AndroidApi();
         executor= Executors.newSingleThreadExecutor();

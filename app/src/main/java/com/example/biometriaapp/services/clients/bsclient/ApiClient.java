@@ -53,7 +53,7 @@ import com.example.biometriaapp.services.clients.bsclient.auth.OAuth;
 
 public class ApiClient {
 
-    private String basePath = "http://192.168.0.101:7072";
+    private String basePath = "http://172.20.10.2:7072";
     private boolean debugging = false;
     private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
     private String tempFolderPath = null;
